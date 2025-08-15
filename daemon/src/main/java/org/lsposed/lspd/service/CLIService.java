@@ -41,6 +41,7 @@ import android.util.Log;
 import org.lsposed.daemon.BuildConfig;
 import org.lsposed.daemon.R;
 import org.lsposed.lspd.ICLIService;
+import org.lsposed.lspd.cli.Utils;
 import org.lsposed.lspd.models.Application;
 import org.lsposed.lspd.util.FakeContext;
 import org.lsposed.lspd.util.SignInfo;
@@ -208,12 +209,6 @@ public class CLIService extends ICLIService.Stub {
         return false;
     }
 
-    private static boolean isValidXposedModule(String sPackageName) throws RemoteException {
-        var appInfo = PackageService.getApplicationInfo(sPackageName, PackageManager.GET_META_DATA | PackageService.MATCH_ALL_FLAGS, 0);
-
-        return appInfo != null && appInfo.metaData != null && appInfo.metaData.containsKey("xposedmodule");
-    }
-
     @Override
     public IBinder asBinder() {
         return this;
@@ -251,7 +246,7 @@ public class CLIService extends ICLIService.Stub {
 
     @Override
     public boolean enableModule(String packageName) throws RemoteException {
-        if (!isValidXposedModule(packageName)) {
+        if (!Utils.isValidXposedModule(packageName)) {
             sLastMsg = "Module " + packageName + " is not a valid xposed module";
             return false;
         }
@@ -260,7 +255,7 @@ public class CLIService extends ICLIService.Stub {
 
     @Override
     public boolean setModuleScope(String packageName, List<Application> scope) throws RemoteException {
-        if (!isValidXposedModule(packageName)) {
+        if (!Utils.isValidXposedModule(packageName)) {
             sLastMsg = "Module " + packageName + " is not a valid xposed module";
             return false;
         }
@@ -269,7 +264,7 @@ public class CLIService extends ICLIService.Stub {
 
     @Override
     public List<Application> getModuleScope(String packageName) throws RemoteException {
-        if (!isValidXposedModule(packageName)) {
+        if (!Utils.isValidXposedModule(packageName)) {
             sLastMsg = "Module " + packageName + " is not a valid xposed module";
             return null;
         }
@@ -280,7 +275,7 @@ public class CLIService extends ICLIService.Stub {
 
     @Override
     public boolean disableModule(String packageName) throws RemoteException {
-        if (!isValidXposedModule(packageName)) {
+        if (!Utils.isValidXposedModule(packageName)) {
             sLastMsg = "Module " + packageName + " is not a valid xposed module";
             return false;
         }
@@ -325,7 +320,7 @@ public class CLIService extends ICLIService.Stub {
 
     @Override
     public boolean getAutomaticAdd(String packageName) throws RemoteException {
-        if (!isValidXposedModule(packageName)) {
+        if (!Utils.isValidXposedModule(packageName)) {
             sLastMsg = "Module " + packageName + " is not a valid xposed module";
             return false;
         }
@@ -334,7 +329,7 @@ public class CLIService extends ICLIService.Stub {
 
     @Override
     public void setAutomaticAdd(String packageName, boolean add) throws RemoteException {
-        if (!isValidXposedModule(packageName)) {
+        if (!Utils.isValidXposedModule(packageName)) {
             sLastMsg = "Module " + packageName + " is not a valid xposed module";
             return;
         }

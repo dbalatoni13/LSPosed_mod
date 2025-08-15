@@ -115,9 +115,7 @@ class ListModulesCommand implements Callable<Integer> {
         var lstEnabledModules = Arrays.asList(manager.enabledModules());
         var lstPackages = manager.getInstalledPackagesFromAllUsers(PackageManager.GET_META_DATA | MATCH_ALL_FLAGS, false);
         for (var packageInfo : lstPackages.getList()) {
-            var metaData = packageInfo.applicationInfo.metaData;
-
-            if (metaData != null && metaData.containsKey("xposedmodule")) {
+            if (Utils.isValidXposedModule(packageInfo.applicationInfo)) {
                 var bPkgEnabled = lstEnabledModules.contains(packageInfo.packageName);
 
                 if ((objArgs.bEnable && bPkgEnabled) || (objArgs.bDisable && !bPkgEnabled) || (!objArgs.bEnable && !objArgs.bDisable)) {
@@ -418,9 +416,7 @@ class BackupCommand implements Callable<Integer> {
             List<String> modules = new ArrayList<>();
             var packages = manager.getInstalledPackagesFromAllUsers(PackageManager.GET_META_DATA | MATCH_ALL_FLAGS, false);
             for (var packageInfo : packages.getList()) {
-                var metaData = packageInfo.applicationInfo.metaData;
-
-                if (metaData != null && metaData.containsKey("xposedmodule")) {
+                if (Utils.isValidXposedModule(packageInfo.applicationInfo)) {
                     modules.add(packageInfo.packageName);
                 }
             }
@@ -508,9 +504,7 @@ class RestoreCommand implements Callable<Integer> {
             modules = new ArrayList<>();
             var packages = manager.getInstalledPackagesFromAllUsers(PackageManager.GET_META_DATA | MATCH_ALL_FLAGS, false);
             for (var packageInfo : packages.getList()) {
-                var metaData = packageInfo.applicationInfo.metaData;
-
-                if (metaData != null && metaData.containsKey("xposedmodule")) {
+                if (Utils.isValidXposedModule(packageInfo.applicationInfo)) {
                     modules.add(packageInfo.packageName);
                 }
             }
